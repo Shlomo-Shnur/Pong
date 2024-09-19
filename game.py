@@ -9,45 +9,51 @@ SCREEN_HEIGHT = 600
 SCREEN_WIDTH_BORDER = SCREEN_WIDTH // 2 - 20
 SCREEN_HEIGHT_BORDER = SCREEN_HEIGHT // 2 - 20
 
-game_screen = Screen()
-game_screen.bgcolor("black")
-game_screen.title("Ping Pong Py")
-game_screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
-game_screen.tracer(0)
 
-paddles = Paddle()
-ball = Ball()
-score = Scoreboard()
+def game():
+    game_screen = Screen()
+    game_screen.bgcolor("black")
+    game_screen.title("Ping Pong Py")
+    game_screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
+    game_screen.tracer(0)
 
-game_screen.listen()
-game_screen.onkey(lambda: up(paddles.right_paddle), "Up")
-game_screen.onkey(lambda: down(paddles.right_paddle), "Down")
-game_screen.onkey(lambda: up(paddles.left_paddle), "w")
-game_screen.onkey(lambda: down(paddles.left_paddle), "s")
+    paddles = Paddle()
+    ball = Ball()
+    score = Scoreboard()
 
-game_is_on = True
-while game_is_on:
-    game_screen.update()
-    time.sleep(ball.move_speed)
-    ball.move()
+    game_screen.listen()
+    game_screen.onkey(lambda: up(paddles.right_paddle), "Up")
+    game_screen.onkey(lambda: down(paddles.right_paddle), "Down")
+    game_screen.onkey(lambda: up(paddles.left_paddle), "w")
+    game_screen.onkey(lambda: down(paddles.left_paddle), "s")
 
-    # collision with wall
-    if ball.ycor() > SCREEN_HEIGHT_BORDER or ball.ycor() < -SCREEN_HEIGHT_BORDER:
-        ball.bounce_floors()
+    game_is_on = True
+    while game_is_on:
+        game_screen.update()
+        time.sleep(ball.move_speed)
+        ball.move()
 
-    # collision with paddles
-    if (ball.distance(paddles.right_paddle) < 50 and ball.xcor() > SCREEN_WIDTH_BORDER - 60) or \
-            (ball.distance(paddles.left_paddle) < 50 and ball.xcor() < -SCREEN_WIDTH_BORDER + 60):
-        ball.bounce_paddle()
+        # collision with wall
+        if ball.ycor() > SCREEN_HEIGHT_BORDER or ball.ycor() < -SCREEN_HEIGHT_BORDER:
+            ball.bounce_floors()
 
-    if ball.xcor() > SCREEN_WIDTH_BORDER:
-        ball.create_ball()
-        ball.bounce_paddle()
-        score.increase_score(paddles.left_paddle)
+        # collision with paddles
+        if (ball.distance(paddles.right_paddle) < 50 and ball.xcor() > SCREEN_WIDTH_BORDER - 60) or \
+                (ball.distance(paddles.left_paddle) < 50 and ball.xcor() < -SCREEN_WIDTH_BORDER + 60):
+            ball.bounce_paddle()
 
-    if ball.xcor() < -SCREEN_WIDTH_BORDER:
-        ball.create_ball()
-        ball.bounce_paddle()
-        score.increase_score(paddles.right_paddle)
+        if ball.xcor() > SCREEN_WIDTH_BORDER:
+            ball.create_ball()
+            ball.bounce_paddle()
+            score.increase_score(paddles.left_paddle)
 
-game_screen.exitonclick()
+        if ball.xcor() < -SCREEN_WIDTH_BORDER:
+            ball.create_ball()
+            ball.bounce_paddle()
+            score.increase_score(paddles.right_paddle)
+
+    game_screen.exitonclick()
+
+
+if __name__ == "__main__":
+    game()
